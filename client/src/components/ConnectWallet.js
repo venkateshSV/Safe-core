@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import GetAllSafes from './GetAllSafes';
 import { ethers } from "ethers";
 
+
 const ConnectWallet = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 	const [defaultAccount, setDefaultAccount] = useState(null);

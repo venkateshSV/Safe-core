@@ -1,11 +1,14 @@
 import React,{ useState} from 'react'
 import axios from 'axios';
+import Home from './Home';
+import {createSearchParams, Link, useNavigate} from 'react-router-dom'
 
 const GetAllSafes = ({walletAddress}) =>{
 
     const url = "http://localhost:8080/";
     const [getAllSafes,setGetAllSafes] = useState(null);
-
+    const navigate = useNavigate();
+ 
     const getSafes = async() =>
     {
         try
@@ -35,12 +38,23 @@ const GetAllSafes = ({walletAddress}) =>{
             console.log(error);
             }
     }
+
     const safeDataChange = (newData) =>
     {
-        console.log(10);
-        console.log(newData['data']['safes']);
         setGetAllSafes(newData['data']['safes']);
     }
+
+    const openSafe = (id) =>
+    {
+        navigate({
+            pathname: "/home",
+            search : createSearchParams({
+                id: id
+            }).toString()
+
+        });
+    };
+
   return (
     <div>
         <button style={{backgroundColor: '#008080',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 16}}onClick={getSafes}>Get all Safes</button>
@@ -58,15 +72,14 @@ const GetAllSafes = ({walletAddress}) =>{
                         }}>NULL</h1>: getAllSafes.map(each => {
                     return (
                     <div
+                        key = {each}
                         style={{
-                        width: "30em",
-                        backgroundColor: "#35D841",                                     
                         padding: 2,
                         borderRadius: 10,
                         marginBlock: 10,
                         }}
                     >
-                        <p style={{ fontSize: 20, color: 'white' }}>{each}</p>
+                        <button style={{ fontSize: 20, color: 'green' , backgroundColor: "#35D841"}} onClick={() => openSafe(each)} >{each}</button>
                     </div>
                     );
                 })}

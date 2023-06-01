@@ -57,7 +57,7 @@ const GetAllSafes = ({walletAddress}) =>{
 
   return (
     <div>
-        <button style={{backgroundColor: '#008080',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 16}}onClick={getSafes}>Get all Safes</button>
+        <button style={{backgroundColor: '#008080',color: 'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={getSafes}>Get all Safes</button>
         <div className="getAllSafesclass">
             <h1 style={{ color: "green" }}>Safes corresponding to the connected wallet</h1>
             <center>

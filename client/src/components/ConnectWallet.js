@@ -48,7 +48,7 @@ const ConnectWallet = () => {
   return (
     <div>
       <h1>{!defaultAccount? "Connect your wallet!" : <p>Your wallet address: {defaultAccount}</p>}</h1>
-      <button style={{backgroundColor: '#008080',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 16}}onClick={connectWallet}>Connect</button>
+      <button style={{backgroundColor: '#008080',borderRadius: 10,color:'white', marginTop: 10,marginRight:10, fontSize: 20}}onClick={connectWallet}>Connect</button>
       <GetAllSafes walletAddress = {defaultAccount}/>
     </div>
   )

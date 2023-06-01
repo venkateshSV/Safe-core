@@ -209,10 +209,10 @@ app.put('/getAllSafes',async (req,res)=>{
   }
 })
 
-app.get('/getSafeInfo',async(req,res)=>{
+app.put('/getSafeInfo',async(req,res)=>{
   try {
     // console.log(req.body.safeAddress);
-    const info = await getSafeInfo(req.body.safeAddress);
+    const info = await getSafeInfo(req.body['safeAddress']);
     console.log(info);
     res.status(200).json(info);
     

@@ -1,13 +1,13 @@
 import React,{useState} from 'react'
 import GetAllSafes from './GetAllSafes';
-import { ethers } from "ethers";
+import { ethers, utils } from "ethers";
+
 
 
 const ConnectWallet = () => {
   const [errorMessage, setErrorMessage] = useState(null);
 	const [defaultAccount, setDefaultAccount] = useState(null);
 	const [connButtonText, setConnButtonText] = useState('Connect Wallet');
-
   const connectWallet = async() =>{
     try {
       if (window.ethereum && window.ethereum.isMetaMask) {
@@ -31,7 +31,12 @@ const ConnectWallet = () => {
     }
   }
   const accountChangedHandler = (newAccount) => {
-		const acc = ethers.getAddress(newAccount);
+		const acc = ethers.utils.getAddress(newAccount);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    console.log(provider);
+    const signer = provider.getSigner();
+    console.log(10);
+    console.log(signer);
     setDefaultAccount(acc);
 	}
 
@@ -55,3 +60,4 @@ const ConnectWallet = () => {
 }
 
 export default ConnectWallet
+

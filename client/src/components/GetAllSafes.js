@@ -2,6 +2,7 @@ import React,{ useState} from 'react'
 import axios from 'axios';
 import Home from './Home';
 import {createSearchParams, Link, useNavigate} from 'react-router-dom'
+import NewSafe from './NewSafe';
 
 const GetAllSafes = ({walletAddress}) =>{
 
@@ -57,6 +58,7 @@ const GetAllSafes = ({walletAddress}) =>{
 
   return (
     <div>
+        <NewSafe />
         <button style={{backgroundColor: '#008080',color: 'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={getSafes}>Get all Safes</button>
         <div className="getAllSafesclass">
             <h1 style={{ color: "green" }}>Safes corresponding to the connected wallet</h1>

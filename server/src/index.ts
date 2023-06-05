@@ -34,7 +34,7 @@ app.use(express.json());
 
 // console.log(10);
 const owner1Signer = new ethers.Wallet(process.env.OWNER_1_PRIVATE_KEY!,provider);
-// console.log(owner1Signer);
+// const owner1Signer = provider.getSigner();
 const ethAdapterOwner1 = new EthersAdapter({
   ethers,
   signerOrProvider: owner1Signer
@@ -77,32 +77,41 @@ async function deploySafe(threshold:number) : Promise<void>
 
 // deploySafe(1);
 
-async function createTransaction(to:string, amount:string) : Promise<any>
+async function createTransaction(to:string, amount:string,signer:any) : Promise<any>
 {
-  const amt = ethers.utils.parseUnits(amount, 'ether').toString()
-  const safeTransactionData: SafeTransactionDataPartial = {
-    to: to,
-    data: '0x',
-    value: amt
-  }
-  // Create a Safe transaction with the provided parameters
+  try{
+    const ethAdapterOwner1 = new EthersAdapter({
+      ethers,
+      signerOrProvider: signer
+    })
+    const amt = ethers.utils.parseUnits(amount, 'ether').toString()
+    const safeTransactionData: SafeTransactionDataPartial = {
+      to: to,
+      data: '0x',
+      value: amt
+    }
+    // Create a Safe transaction with the provided parameters
 
-  const safeConfig: SafeConfig={
-    ethAdapter: ethAdapterOwner1,
-    safeAddress: safeAddress
+    const safeConfig: SafeConfig={
+      ethAdapter: ethAdapterOwner1,
+      safeAddress: safeAddress
+    }
+    const safeSdk = await Safe.create(safeConfig);
+    const safeTransaction = await safeSdk.createTransaction({ safeTransactionData });
+    const safeTxHash = await safeSdk.getTransactionHash(safeTransaction)
+    const senderSignature = await safeSdk.signTransactionHash(safeTxHash)
+    await safeService.proposeTransaction({
+      safeAddress,
+      safeTransactionData: safeTransaction.data,
+      safeTxHash,
+      senderAddress: await owner1Signer.getAddress(),
+      senderSignature: senderSignature.data
+    })
+  }catch(err)
+  {
+    console.log(err);
   }
-  const safeSdk = await Safe.create(safeConfig);
-  const safeTransaction = await safeSdk.createTransaction({ safeTransactionData });
-  const safeTxHash = await safeSdk.getTransactionHash(safeTransaction)
-  const senderSignature = await safeSdk.signTransactionHash(safeTxHash)
-  await safeService.proposeTransaction({
-    safeAddress,
-    safeTransactionData: safeTransaction.data,
-    safeTxHash,
-    senderAddress: await owner1Signer.getAddress(),
-    senderSignature: senderSignature.data
-  })
-
+  
 } 
 
 // createTransaction('0x517fF00d27eFE58a73969466c19af7C956066d36','0.0001');
@@ -180,6 +189,7 @@ async function getSafeInfo(safeAddress:string): Promise<any>
   }
 }
 
+
 // getAllSafes('0x08F928415B86f2425c0d9972307bda1072313b3d').then(console.log);
 
 // console.log(getAllTxn(safeAddress));
@@ -213,6 +223,23 @@ app.put('/getSafeInfo',async(req,res)=>{
   try {
     // console.log(req.body.safeAddress);
     const info = await getSafeInfo(req.body['safeAddress']);
+    // console.log(info);
+    res.status(200).json(info);
+    
+  } catch (error) {
+    console.log(error);
+    res.status(400).send('Error getting Safe info')
+  }
+})
+
+app.put('/createTransaction',async(req,res)=>{
+  try {
+    console.log(10);
+    console.log(req.body);
+    const to= '0x517fF00d27eFE58a73969466c19af7C956066d36';
+    const amt = '0.0001';
+    const signer = req.body['signer'];
+    const info = await createTransaction(to,amt,signer);
     console.log(info);
     res.status(200).json(info);
     

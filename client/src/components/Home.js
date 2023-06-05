@@ -1,6 +1,7 @@
 import React,{ useState} from 'react'
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom'
+import CreateTransaction from './CreateTransaction';
 
 const Home = () =>{
     const [searchParams] = useSearchParams();
@@ -71,6 +72,7 @@ const Home = () =>{
                 );
             })
             }
+            <CreateTransaction safeAddress = {safeAddress}/>
           </div>
 
         }

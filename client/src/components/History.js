@@ -2,7 +2,6 @@ import React,{ useState} from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { ethers } from "ethers";
-import Safe from '@safe-global/protocol-kit';
 import {EthersAdapter} from '@safe-global/protocol-kit'
 import SafeApiKit from '@safe-global/api-kit'
 
@@ -10,7 +9,6 @@ const History = () => {
     
     const txServiceUrl = 'https://safe-transaction-goerli.safe.global';
     const [searchParams] = useSearchParams();
-    const [showHistory, setShowHistory] = useState(false);
     const safeAddress = searchParams.get('safeAddress');
     const [allSafeTxns,setAllSafeTxns] = useState(null);
 
@@ -31,15 +29,15 @@ const History = () => {
         <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}} onClick = {getAllTxns}>Show All Txn</button>
         {!allSafeTxns ? <h1 style={{
                 width: "30em",
-                backgroundColor: "#35D841",                                     
+                backgroundColor: "#d8f8f5",                                     
                 padding: 2,
                 borderRadius: 10,
                 marginBlock: 10,
                 fontSize: 20, 
-                color: 'white' 
+                color: 'black' 
                 }}>NULL</h1>: allSafeTxns.map(each => {
             return (
-            <div key = {each['executionDate']} >
+            <div key = {each['executionDate']+each['nonce']} >
                 {each['isExecuted']==true ?
                 <div style={{padding: '20px',borderStyle:'groove',margin:'20px',backgroundColor:'#d8f8f5'}}>
                     <div>

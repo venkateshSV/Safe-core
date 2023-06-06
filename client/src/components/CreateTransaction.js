@@ -5,13 +5,13 @@ import Safe from '@safe-global/protocol-kit';
 import {EthersAdapter} from '@safe-global/protocol-kit'
 import {SafeTransactionDataPartial} from '@safe-global/safe-core-sdk-types'
 import SafeApiKit from '@safe-global/api-kit'
-
+import {createSearchParams, Link, useNavigate} from 'react-router-dom'
 
 const CreateTransaction = ({safeAddress}) =>{
-    const [txn,setTxn] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [toAddress,setToAddress] = useState("");
     const [amount,setAmount] = useState("");
+    const navigate = useNavigate();
 
     const url = "http://localhost:8080/"; 
     const txServiceUrl = 'https://safe-transaction-goerli.safe.global'
@@ -62,10 +62,16 @@ const CreateTransaction = ({safeAddress}) =>{
       }
         
     }
-    const txInfoChange = (newData) =>
+    const openTransactions = () =>
     {
-      setTxn(newData);
-    }
+        navigate({
+            pathname: "/transaction",
+            search : createSearchParams({
+                safeAddress: safeAddress
+            }).toString()
+
+        });
+    };
   return (
     <div>
       <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={showForms}>New Transaction</button>
@@ -127,6 +133,7 @@ const CreateTransaction = ({safeAddress}) =>{
             </form>
         )}
       </div>
+      <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={() =>openTransactions()}>Transactions</button>
     </div>
     
   )

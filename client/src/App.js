@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Routes, BrowserRouter} from 'react-route
 import SafeProvider from '@safe-global/safe-apps-react-sdk';
 import Home from './components/Home';
 import ConnectWallet from './components/ConnectWallet';
+import Transactions from './components/Transactions';
 
 export class App extends Component {
   render() {
@@ -14,6 +15,7 @@ export class App extends Component {
             <Routes>
               <Route exact path='/' element = {<ConnectWallet />} />
               <Route exact path='/home' element = {<Home />} />
+              <Route exact path='/transaction' element={<Transactions />}/>
             </Routes>
           </BrowserRouter>
         </SafeProvider>

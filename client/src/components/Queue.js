@@ -86,7 +86,7 @@ const Queue = () =>{
                     <div>
                         <p style={{padding:'20px'}}>Send {ethers.utils.formatEther(each['value'])} GOR to: {each['to']}</p>
                         <p style={{padding:'20px'}}>Safe Transaction hash: {each['safeTxHash']}</p>
-                        {each['confirmations'].length!=each['confirmationsRequired'] ? 
+                        {each['confirmations'].length!==each['confirmationsRequired'] ? 
                         <div>
                           <span><button style={{color:'#008C73'}} onClick={() => confirmTxn(each['safeTxHash'])}>Confirm</button></span>
                           <span><button style={{backgroundColor:'#F02525',color:'white',borderRadius:'5px',fontSize:20}} onClick={() => rejectTxn(each['safeTxHash'])}>Replace</button></span>

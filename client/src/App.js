@@ -9,7 +9,6 @@ export class App extends Component {
   render() {
     return (
       <div className='App'>
-        <SafeProvider>
           <h1>Safe-Core App</h1>
           <BrowserRouter>
             <Routes>
@@ -18,7 +17,6 @@ export class App extends Component {
               <Route exact path='/transaction' element={<Transactions />}/>
             </Routes>
           </BrowserRouter>
-        </SafeProvider>
       </div>
       
     );

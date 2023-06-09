@@ -65,7 +65,7 @@ const GetAllSafes = ({walletAddress}) =>{
             <center>
                 {!getAllSafes ? <h1 style={{
                         width: "30em",
-                        backgroundColor: "#35D841",                                     
+                        backgroundColor: "#4CAF50",                                     
                         padding: 2,
                         borderRadius: 10,
                         marginBlock: 10,
@@ -81,7 +81,7 @@ const GetAllSafes = ({walletAddress}) =>{
                         marginBlock: 10,
                         }}
                     >
-                        <button style={{ fontSize: 20, color: 'green' , backgroundColor: "#35D841"}} onClick={() => openSafe(each)} >{each}</button>
+                        <button style={{ width: '50%',fontSize: 20, color: 'white' , backgroundColor: "#4CAF50",borderRadius: 10}} onClick={() => openSafe(each)} >{each}</button>
                     </div>
                     );
                 })}

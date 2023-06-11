@@ -1,4 +1,4 @@
-import React,{ useState} from 'react'
+import React,{ useState,useEffect} from 'react'
 import axios from 'axios';
 import { ethers,providers } from "ethers";
 import Safe from '@safe-global/protocol-kit';
@@ -25,6 +25,10 @@ const CreateTransaction = ({safeAddress}) =>{
     showForms();
     createTxn();
   }
+  useEffect(() => {
+    showForms();
+  }, []);
+
     const createTxn = async() =>{
       try {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -74,8 +78,8 @@ const CreateTransaction = ({safeAddress}) =>{
     };
   return (
     <div>
-      <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={showForms}>New Transaction</button>
-      <div>
+      {/* <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={showForms}>New Transaction</button> */}
+      <div style={{paddingTop:'30px'}}>
         {
           showForm && (
             <form onSubmit={handleSubmit} style={{
@@ -133,7 +137,7 @@ const CreateTransaction = ({safeAddress}) =>{
             </form>
         )}
       </div>
-      <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={() =>openTransactions()}>Transactions</button>
+      {/* <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={() =>openTransactions()}>Transactions</button> */}
     </div>
     
   )

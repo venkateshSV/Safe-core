@@ -1,16 +1,17 @@
-import React,{ useState} from 'react'
+import React,{ useState,useEffect} from 'react'
 import { useSearchParams } from 'react-router-dom'
 import {EthersAdapter} from '@safe-global/protocol-kit'
 import { ethers } from "ethers";
 import Safe from '@safe-global/protocol-kit';
 import SafeApiKit from '@safe-global/api-kit'
+import {ThreeDots} from 'react-loader-spinner'
 
 const Queue = () =>{
   
   const [searchParams] = useSearchParams();
   const txServiceUrl = 'https://safe-transaction-goerli.safe.global';
   const [pendingTx, setPendingTx] = useState(false);
-  const safeAddress = searchParams.get('safeAddress');
+  const safeAddress = searchParams.get('id');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner(0);
   const ethAdapter = new EthersAdapter({
@@ -27,7 +28,7 @@ const Queue = () =>{
   const getPendingTxn = async() =>{  
     const pending = await safeService.getPendingTransactions(safeAddress);
     const pendingTx = pending['results']
-    setPendingTx(pendingTx);
+    setPendingTx(pendingTx.reverse());
     // console.log(pendingTx);
   }
 
@@ -42,6 +43,7 @@ const Queue = () =>{
   }
 
   const confirmTxn = async(txHash) =>{
+    console.log(txHash);
     const safeSdk = await Safe.create(safeConfig);
     const signature = await safeSdk.signTransactionHash(txHash)
     const response = await safeService.confirmTransaction(txHash, signature.data)
@@ -61,19 +63,23 @@ const Queue = () =>{
     console.log('Transaction replaced:')
     console.log(`https://goerli.etherscan.io/tx/${receipt?.transactionHash}`)
   }
+  useEffect(() => {
+    getPendingTxn();
+  }, []);
 
   return (
     <div>
-      <button style={{backgroundColor: '#008080',color: 'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={getPendingTxn}>Get Pending Transactions</button>
-      {!pendingTx ? <h1 style={{
-                width: "30em",
-                backgroundColor: "#d8f8f5",                                     
-                padding: 2,
-                borderRadius: 10,
-                marginBlock: 10,
-                fontSize: 20, 
-                color: 'black' 
-                }}>NULL</h1>: pendingTx.map(each => {
+      {/* <button style={{backgroundColor: '#008080',color: 'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={getPendingTxn}>Get Pending Transactions</button> */}
+      {!pendingTx ? <div style={{marginLeft:'auto',marginRight:'auto',width:'8em'}}><ThreeDots 
+                        height="100" 
+                        width="100" 
+                        radius="9"
+                        color="#008080" 
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClassName=""
+                        visible={true}
+                        /></div>: pendingTx.map(each => {
             return (
             <div key = {each['nonce']} >
                 

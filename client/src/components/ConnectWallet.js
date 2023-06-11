@@ -64,9 +64,13 @@ const ConnectWallet = () =>
     }
   };
   return (
-    <div>
-      {/* <h1>{!defaultAccount? "Connect your wallet!" : <p>Your wallet address: {defaultAccount} </p>}</h1> */}
-      <button style={{backgroundColor: '#008080',borderRadius: 10,color:'white', marginTop: 10,marginRight:10, fontSize: 20}}onClick={connectWallet}>
+    <div >
+      {/* <div style={{width:'100%',alignItems:'center',justifyContent:'space-evenly'}}>
+        <div>
+            <h1 style={{float:'left'}}> Safe &#123;WALLET&#125; </h1>
+        </div>
+        <div style={{float:'right'}}>
+        <button style={{backgroundColor: '#008080',borderRadius: 10,color:'white', marginTop: 10,marginRight:10, fontSize: 20}}onClick={connectWallet}>
         <span>
           {walletAddress && walletAddress.length > 0
             ? `Connected: ${walletAddress.substring(
@@ -76,9 +80,11 @@ const ConnectWallet = () =>
             : "Connect Wallet"}
         </span>
       </button>
-      <h2>Wallet address: {walletAddress && walletAddress.length>0 ? ethers.utils.getAddress(walletAddress) : walletAddress}</h2>
+      </div>
+    </div> */}
       <GetAllSafes walletAddress = {walletAddress && walletAddress.length>0 ? ethers.utils.getAddress(walletAddress) : walletAddress}/>
     </div>
+
   )
 }
 

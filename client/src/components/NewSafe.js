@@ -50,7 +50,7 @@ const NewSafe = () =>{
 
 
   return (
-      <div>
+      <div style={{paddingTop:'100px'}}>
       <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={showForms}>New Safe</button>
       <div>
         {

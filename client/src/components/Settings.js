@@ -1,13 +1,9 @@
-import React,{ useState} from 'react'
+import React,{ useState,useEffect} from 'react'
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom'
-import CreateTransaction from './CreateTransaction';
-import { Sidebar, Menu, MenuItem, SubMenu,sidebarClasses } from 'react-pro-sidebar';
-import Transactions from './Transactions';
-import { Link } from 'react-router-dom';
-import Dashboard from './Dashboard';
+import {ThreeDots} from 'react-loader-spinner'
 
-const Home = () =>{
+function Settings() {
     const [searchParams] = useSearchParams();
     const [safeInfo,setSafeInfo] = useState(null);
 
@@ -45,18 +41,24 @@ const Home = () =>{
     {
       setSafeInfo(newData['data']);
     }
+    useEffect(() => {
+        getSafesInfo();
+      }, []);
   return (
-    <div style={{alignItems:'center',justifyContent:'space-evenly',paddingTop:'91px'}}>
-        <div style={{float: 'right',position:'absolute',paddingLeft:'400px'}}>
-          <h1>
-              <p>
-                  Your current safe address is : {searchParams.get("id")};
-              </p>
-              
-          </h1>
-          <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={getSafesInfo}>Get Safe Info</button>
+    <div>
+        <div>
+          {/* <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={getSafesInfo}>Get Safe Info</button> */}
           <div>
-          {!safeInfo ? <h2>Safe info not available</h2> : 
+          {!safeInfo ? <div style={{marginLeft:'auto',marginRight:'auto',width:'8em'}}><ThreeDots 
+                        height="100" 
+                        width="100" 
+                        radius="9"
+                        color="#008080" 
+                        ariaLabel="three-dots-loading"
+                        wrapperStyle={{}}
+                        wrapperClassName=""
+                        visible={true}
+                        /></div> : 
             <div>
               <h2>Nonce : {safeInfo['nonce']}</h2>
               <h2>Threshold : {safeInfo['threshold']}</h2>
@@ -78,7 +80,6 @@ const Home = () =>{
                   );
               })
               }
-              <CreateTransaction safeAddress = {safeAddress}/>
             </div>
 
           }
@@ -89,4 +90,4 @@ const Home = () =>{
   )
 }
 
-export default Home
+export default Settings

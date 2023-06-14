@@ -62,12 +62,12 @@ const Header = () =>{
     }
   };
   return (
-    <div style={{width:'100%',position:'fixed',alignItems:'center',justifyContent:'space-evenly',paddingBottom:'10px',backgroundColor:'#E9E9EA',zIndex:20,top:0}}>
+    <div style={{width:'100%',position:'fixed',alignItems:'center',justifyContent:'space-evenly',paddingBottom:'10px',backgroundColor:'#E8EAF5',zIndex:20,top:0,left:0}}>
       <div>
-        <h1 style={{float:'left'}}> Safe &#123;WALLET&#125; </h1>
+        <h1 style={{float:'left',paddingLeft:'20px'}}> Safe &#123;WALLET&#125; </h1>
       </div>
       <div style={{float:'right',paddingTop:'13px'}}>
-        <button style={{backgroundColor: '#008080',borderRadius: 10,color:'white', marginTop: 10,marginRight:10, fontSize: 20}}onClick={connectWallet}>
+        <button style={{backgroundColor: '#EA5229',borderRadius: 5,color:'white', marginTop: 10,marginRight:10, fontSize: 20}}onClick={connectWallet}>
           <span>
             {walletAddress && walletAddress.length > 0
               ? `Connected: ${walletAddress.substring(

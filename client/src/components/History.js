@@ -44,7 +44,7 @@ const History = () => {
             return (
             <div key = {each['executionDate']+each['nonce']} >
                 {each['isExecuted']==true ?
-                <div style={{padding: '20px',borderStyle:'groove',margin:'20px',backgroundColor:'#d8f8f5'}}>
+                <div style={{padding: '20px',borderStyle:'groove',margin:'20px',backgroundColor:'#E8EAF5',borderColor:'#CFD2DF',borderRadius:8}}>
                     <div>
                         <span style={{padding:'20px'}}>Nonce: {each['nonce']}</span>
                         <span style={{padding:'20px'}}>{!each['dataDecoded'] ? <span></span> : each['dataDecoded']['method']}</span>

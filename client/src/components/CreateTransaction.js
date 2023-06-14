@@ -6,13 +6,16 @@ import {EthersAdapter} from '@safe-global/protocol-kit'
 import {SafeTransactionDataPartial} from '@safe-global/safe-core-sdk-types'
 import SafeApiKit from '@safe-global/api-kit'
 import {createSearchParams, Link, useNavigate} from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 
-const CreateTransaction = ({safeAddress}) =>{
+const CreateTransaction = () =>{
     const [showForm, setShowForm] = useState(false);
+    const [searchParams] = useSearchParams();
     const [toAddress,setToAddress] = useState("");
     const [amount,setAmount] = useState("");
+    const [txStatus,setTxStatus] = useState(null);
     const navigate = useNavigate();
-
+    const safeAddress = searchParams.get('id');
     const url = "http://localhost:8080/"; 
     const txServiceUrl = 'https://safe-transaction-goerli.safe.global'
     const showForms = () => {
@@ -22,6 +25,7 @@ const CreateTransaction = ({safeAddress}) =>{
     event.preventDefault();
     // console.log(toAddress);
     // console.log(amount);
+    setTxStatus('Processing');
     showForms();
     createTxn();
   }
@@ -41,10 +45,13 @@ const CreateTransaction = ({safeAddress}) =>{
         console.log(toAddress);
         console.log(amount);
         const amt = ethers.utils.parseUnits(amount, 'ether').toString()
+        const nextNonce = await safeService.getNextNonce(safeAddress);
+        console.log(nextNonce);
         const safeTransactionData = {
           to: toAddress,
           data: '0x',
-          value: amt
+          value: amt,
+          nonce: nextNonce
         }
         const safeConfig = {
           ethAdapter: ethAdapter,
@@ -52,16 +59,26 @@ const CreateTransaction = ({safeAddress}) =>{
         }
         const safeSdk = await Safe.create(safeConfig);
         const safeTransaction = await safeSdk.createTransaction({ safeTransactionData });
-        const safeTxHash = await safeSdk.getTransactionHash(safeTransaction)
-        const senderSignature = await safeSdk.signTransactionHash(safeTxHash)
-        await safeService.proposeTransaction({
-          safeAddress,
-          safeTransactionData: safeTransaction.data,
-          safeTxHash,
-          senderAddress: await signer.getAddress(),
-          senderSignature: senderSignature.data
-        })
+        const isValidTx = await safeSdk.isValidTransaction(safeTransaction)
+        if(isValidTx)
+        {
+          const safeTxHash = await safeSdk.getTransactionHash(safeTransaction)
+          const senderSignature = await safeSdk.signTransactionHash(safeTxHash)
+          await safeService.proposeTransaction({
+            safeAddress,
+            safeTransactionData: safeTransaction.data,
+            safeTxHash,
+            senderAddress: await signer.getAddress(),
+            senderSignature: senderSignature.data
+          })
+          setTxStatus("Successful");
+          console.log('Submitted!')
+        }else{
+          setTxStatus("Invalid Transaction");
+        }
+
       } catch (error) {
+        setTxStatus(error);
         console.log(error);
       }
         
@@ -136,6 +153,13 @@ const CreateTransaction = ({safeAddress}) =>{
               </div>
             </form>
         )}
+        <div>
+          {txStatus!==null ? 
+          <div>
+            <h3>{txStatus}</h3>
+          </div>
+          : <div></div>}
+        </div>
       </div>
       {/* <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={() =>openTransactions()}>Transactions</button> */}
     </div>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component,useLayoutEffect } from 'react'
 import {BrowserRouter as Router, Route, Routes, BrowserRouter} from 'react-router-dom'
 import Home from './components/Home';
 import ConnectWallet from './components/ConnectWallet';
@@ -7,6 +7,7 @@ import Header from './components/Header';
 import Settings from './components/Settings';
 import Assets from './components/Assets';
 import Dashboard from './components/Dashboard';
+
 
 export class App extends Component {
   render() {

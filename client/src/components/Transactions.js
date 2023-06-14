@@ -20,8 +20,8 @@ const Transactions = () =>{
 
   return (
     <div>
-        <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}} onClick = {showQueues}>Queue</button>
-        <button style={{backgroundColor: '#008080',color:'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}} onClick = {showHistorys} >History</button>
+        <button style={{backgroundColor: '#003C6D',color:'white',borderRadius: 5, marginTop: 10,marginRight:10, fontSize: 20}} onClick = {showQueues}>Queue</button>
+        <button style={{backgroundColor: '#003C6D',color:'white',borderRadius: 5, marginTop: 10,marginRight:10, fontSize: 20}} onClick = {showHistorys} >History</button>
         <div>
             {!showHistory ?  <Queue /> : <History />}
         </div>

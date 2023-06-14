@@ -30,22 +30,25 @@ const Dashboard = () =>{
       setCurrentPage('newTransaction')
     }
 
+    // 0B4E86 hover
+    // '&:hover':{backgroundColor:'#0B4E86'}
 
   return (
-    <div style={{alignItems:'center',justifyContent:'space-evenly',paddingTop:'91px'}}>
-        <div style={{float:'left',paddingRight:'50px',position:'fixed'}}>
+    <div style={{alignItems:'center',justifyContent:'space-evenly',paddingTop:'80px'}}>
+        <div style={{float:'left',paddingRight:'50px',position:'fixed',fontSize:'25px',color:'white',left:'0'}}>
           <Sidebar rootStyles={{
               [`.${sidebarClasses.container}`]: {
-                backgroundColor: '#0CABA8',
+                // backgroundColor: '#0CABA8',
+                backgroundColor:'#003C6D',
                 width:220,
                 position:'absolute',
-                height:'91vh'
+                height:'95vh'
               },
             }}>
               <Menu>
-                <MenuItem onClick={openNewTransaction} style={{color:'black',backgroundColor:'#0FC2C0',border:'2px solid black',borderRadius:'10px',fontSize:'20px',paddingTop:'30px',paddingBottom:'30px'}}>New Transaction</MenuItem>
+                <MenuItem onClick={openNewTransaction} style={{color:'white',backgroundColor:'#2171B2',borderRadius:'10px',fontSize:'25px',paddingTop:'30px',paddingBottom:'30px'}}>New Transaction</MenuItem>
               </Menu>
-            <Menu style={{paddingTop:'30px'}}>
+            <Menu style={{paddingTop:'30px'}} menuItemStyles={{button:{'&:hover':{backgroundColor:'#0B4E86'}}}}>
               <MenuItem onClick={openHome}>Home</MenuItem>
               <MenuItem onClick={openAssets}>Assets</MenuItem>
               <MenuItem onClick={openTransactions}>Transactions</MenuItem>

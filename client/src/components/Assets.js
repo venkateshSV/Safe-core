@@ -50,7 +50,7 @@ const Assets = () =>{
                         wrapperClassName=""
                         visible={true}
                         /></div>:
-        <div style={{padding: '20px',borderStyle:'groove',margin:'20px',backgroundColor:'#d8f8f5',width:'50%'}}>
+        <div style={{padding: '20px',borderStyle:'groove',margin:'20px',backgroundColor:'#E8EAF5',borderColor:'#CFD2DF',borderRadius:8,width:'50%'}}>
             <span style={{paddingRight:'100px'}}>{assetName} Ether</span>
             <span style={{paddingLeft:'400px'}}>{balance} GOR </span>
         </div>

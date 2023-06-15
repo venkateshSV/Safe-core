@@ -4,12 +4,15 @@ import {EthersAdapter} from '@safe-global/protocol-kit'
 import { ethers } from "ethers";
 import Safe from '@safe-global/protocol-kit';
 import SafeApiKit from '@safe-global/api-kit'
-import {ThreeDots} from 'react-loader-spinner'
+import {ThreeDots,Oval} from 'react-loader-spinner'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Queue = () =>{
   
   const [searchParams] = useSearchParams();
   const txServiceUrl = 'https://safe-transaction-goerli.safe.global';
+  const [txStatus,setTxStatus] = useState('');
   const [pendingTx, setPendingTx] = useState(false);
   const safeAddress = searchParams.get('id');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -68,13 +71,33 @@ const Queue = () =>{
   }
 
   const executeTxn = async(txHash) =>{
+    
+    
     const safeSdk = await Safe.create(safeConfig);
-    const safeTransaction = await safeService.getTransaction(txHash);
-    const executeTxResponse = await safeSdk.executeTransaction(safeTransaction);
-    const receipt = await executeTxResponse.transactionResponse?.wait();
+    const validTx = await safeSdk.isOwner(signer.getAddress());
+    if(validTx==true)
+    {
+      setTxStatus('Processing');
+      const safeTransaction = await safeService.getTransaction(txHash);
+      const executeTxResponse = await safeSdk.executeTransaction(safeTransaction);
+      const receipt = await executeTxResponse.transactionResponse?.wait();
+      setTxStatus('Successful');
+      console.log('Transaction executed:')
+      console.log(`https://goerli.etherscan.io/tx/${receipt?.transactionHash}`)
+    }else{
+      // alert.error('The wallet address is not an owner of the current safe.');
+      toast.error('The wallet address is not an owner of the current safe.', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
+    }
 
-    console.log('Transaction executed:')
-    console.log(`https://goerli.etherscan.io/tx/${receipt?.transactionHash}`)
   }
 
   const confirmTxn = async(txHash) =>{
@@ -88,15 +111,31 @@ const Queue = () =>{
   const rejectTxn = async(txHash) =>
   {
     const safeSdk = await Safe.create(safeConfig);
-    const safeTransaction = await safeService.getTransaction(txHash);
-    console.log(safeTransaction['nonce']);
-    const rejectionTransaction = await safeSdk.createRejectionTransaction(safeTransaction['nonce'])
-    console.log(rejectionTransaction);
-    const executeTxResponse = await safeSdk.executeTransaction(rejectionTransaction);
-    const receipt = await executeTxResponse.transactionResponse?.wait();
+    const validTx = await safeSdk.isOwner(signer.getAddress());
+    if(validTx==true)
+    {
+      const safeTransaction = await safeService.getTransaction(txHash);
+      console.log(safeTransaction['nonce']);
+      const rejectionTransaction = await safeSdk.createRejectionTransaction(safeTransaction['nonce'])
+      console.log(rejectionTransaction);
+      const executeTxResponse = await safeSdk.executeTransaction(rejectionTransaction);
+      const receipt = await executeTxResponse.transactionResponse?.wait();
+  
+      console.log('Transaction replaced:')
+      console.log(`https://goerli.etherscan.io/tx/${receipt?.transactionHash}`)
+    }else{
+      toast.error('The wallet address is not an owner of the current safe.', {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
+    }
 
-    console.log('Transaction replaced:')
-    console.log(`https://goerli.etherscan.io/tx/${receipt?.transactionHash}`)
   }
   useEffect(() => {
     getPendingTxn();
@@ -116,14 +155,14 @@ const Queue = () =>{
                         visible={true}
                         /></div>: 
                         <div>
-                          <button style={{backgroundColor: '#008080',color: 'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={executeBatch}>Execute Batch</button>
+                          <button style={{backgroundColor: '#003C6D',color: 'white',borderRadius: 5, marginTop: 10,marginRight:10, fontSize: 20}}onClick={executeBatch}>Execute Batch</button>
                           {
                             pendingTx.map(each => {
                               return (
                                   <div>
                                       <div key = {each['nonce']} >
                                           
-                                          <div style={{padding: '20px',borderStyle:'groove',margin:'20px',backgroundColor:'#d8f8f5'}}>
+                                          <div style={{padding: '20px',borderStyle:'groove',margin:'20px',backgroundColor:'#E8EAF5',borderColor:'#CFD2DF',borderRadius:8}}>
                                               <div>
                                                   <span style={{padding:'20px'}}>Nonce: {each['nonce']}</span>
                                                   <span style={{padding:'20px'}}> - {ethers.utils.formatEther(each['value'])} GOR </span>
@@ -134,13 +173,34 @@ const Queue = () =>{
                                                   <p style={{padding:'20px'}}>Safe Transaction hash: {each['safeTxHash']}</p>
                                                   {each['confirmations'].length!==each['confirmationsRequired'] ? 
                                                   <div>
-                                                    <span><button style={{color:'#008C73'}} onClick={() => confirmTxn(each['safeTxHash'])}>Confirm</button></span>
+                                                    <span style={{padding:'20px'}}><button style={{backgroundColor:'#008C73',color:'white',borderRadius:'5px',fontSize:20}} onClick={() => confirmTxn(each['safeTxHash'])}>Confirm</button></span>
                                                     <span><button style={{backgroundColor:'#F02525',color:'white',borderRadius:'5px',fontSize:20}} onClick={() => rejectTxn(each['safeTxHash'])}>Replace</button></span>
                                                   </div>
                                                   :
                                                   <div>
+                                                    <ToastContainer />
                                                       <span style={{padding:'20px'}}><button style={{backgroundColor:'#008C73',color:'white',borderRadius:'5px',fontSize:20}} onClick={() => executeTxn(each['safeTxHash'])}>Execute</button></span>
                                                       <span><button style={{backgroundColor:'#F02525',color:'white',borderRadius:'5px',fontSize:20}} onClick={() => rejectTxn(each['safeTxHash'])}>Replace</button></span>
+                                                      {txStatus=='Processing' ? 
+                                                      <div style={{paddingLeft:'1000px'}}>
+                                                        <span><Oval
+                                                            height={40}
+                                                            width={40}
+                                                            color="#FFBF00"
+                                                            wrapperStyle={{}}
+                                                            wrapperClass=""
+                                                            visible={true}
+                                                            ariaLabel='oval-loading'
+                                                            secondaryColor="#FFDB58"
+                                                            strokeWidth={8}
+                                                            strokeWidthSecondary={6}/></span>
+                                                            <span style={{fontSize:'20px',color:'#FFBF00'}}>Processing</span>
+                                                      </div> 
+                                                      : txStatus=='Successful' ? 
+                                                      <div style={{paddingLeft:'1000px'}}>
+                                                        <span style={{fontSize:'20px',color:'#00A332'}}>Successful</span>
+                                                      </div> : 
+                                                      <div></div>}
                                                   </div>
                                                   }
                                               </div>

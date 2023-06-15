@@ -61,11 +61,11 @@ const GetAllSafes = ({walletAddress}) =>{
         <NewSafe />
         <button style={{backgroundColor: '#008080',color: 'white',borderRadius: 10, marginTop: 10,marginRight:10, fontSize: 20}}onClick={getSafes}>Get all Safes</button>
         <div className="getAllSafesclass">
-            <h1 style={{ color: "green" }}>Safes corresponding to the connected wallet</h1>
+            <h1 style={{ color: "#003C6D" }}>Safes corresponding to the connected wallet</h1>
             <center>
                 {!getAllSafes ? <h1 style={{
                         width: "30em",
-                        backgroundColor: "#4CAF50",                                     
+                        backgroundColor: "#003C6D",                                     
                         padding: 2,
                         borderRadius: 10,
                         marginBlock: 10,
@@ -76,12 +76,13 @@ const GetAllSafes = ({walletAddress}) =>{
                     <div
                         key = {each}
                         style={{
-                        padding: 2,
-                        borderRadius: 10,
-                        marginBlock: 10,
+                        paddingBottom: '20px',
+                        borderRadius: 5,
+                        // width:'30em',
+                        alignItems:'center',
                         }}
                     >
-                        <button style={{ width: '50%',fontSize: 20, color: 'white' , backgroundColor: "#4CAF50",borderRadius: 10}} onClick={() => openSafe(each)} >{each}</button>
+                        <button style={{ width: '30em',fontSize: '30px', color: 'white' , backgroundColor:'#003C6D',borderColor:'#CFD2DF',borderRadius:8}} onClick={() => openSafe(each)} >{each}</button>
                     </div>
                     );
                 })}

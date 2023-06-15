@@ -21,7 +21,8 @@ const History = () => {
             signerOrProvider: signer || provider
           });
         const safeService = new SafeApiKit({ txServiceUrl, ethAdapter: ethAdapter});   
-        const allTxs = await safeService.getAllTransactions(safeAddress);
+        var allTxs = []; 
+        allTxs = await safeService.getAllTransactions(safeAddress);
         setAllSafeTxns(allTxs['results']);
         console.log(allTxs['results']);
     }

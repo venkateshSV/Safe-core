@@ -1,12 +1,14 @@
 import React,{ useState,useEffect} from 'react'
 import { useSearchParams } from 'react-router-dom'
-import {EthersAdapter} from '@safe-global/protocol-kit'
+import {EthersAdapter, GnosisSafeContractEthers, getMultiSendContract} from '@safe-global/protocol-kit'
 import { ethers } from "ethers";
 import Safe from '@safe-global/protocol-kit';
+import { SafeTransaction } from '@safe-global/safe-core-sdk-types';
 import SafeApiKit from '@safe-global/api-kit'
 import {ThreeDots,Oval} from 'react-loader-spinner'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getSafeContractDeployment } from '@safe-global/protocol-kit/dist/src/contracts/safeDeploymentContracts';
 
 const Queue = () =>{
   
@@ -35,40 +37,68 @@ const Queue = () =>{
     console.log(pendingTx);
   }
 
+  // const executeBatch = async() =>
+  // {
+  //   var safeTransactionData = [];
+  //   pendingTx.forEach(element => {
+  //     var obj = {
+  //       to: element['to'],
+  //       data: (element['data']==null ? '0x': element['data']),
+  //       value: element['value'],
+  //       nonce: element['nonce']
+  //     }
+  //     safeTransactionData.push(obj);
+  //   });
+  //   const callsOnly = true;
+  //   console.log(safeTransactionData);
+  //   const safeSdk = await Safe.create(safeConfig);
+    
+  //   const safeTransaction = await safeSdk.createTransaction({safeTransactionData,callsOnly});
+  //   const executeTxResponse = await safeSdk.executeTransaction(safeTransaction);
+  //   const receipt = await executeTxResponse.transactionResponse?.wait();
+
+  //   console.log('Transaction executed:');
+  //   console.log(`https://goerli.etherscan.io/tx/${receipt?.transactionHash}`);
+  // }
+  // `````````````````````````````````````````````````````````````Batch transaction using contract interactions```````````````````````````````````````````````````````````````````````````````````````````````````````````
   const executeBatch = async() =>
   {
-    var safeTransactionData = [];
-    pendingTx.forEach(element => {
-      var obj = {
-        to: element['to'],
-        data: (element['data']==null ? '0x': element['data']),
-        value: element['value'],
-        nonce: element['nonce']
-      }
-      safeTransactionData.push(obj);
+    const safe = await Safe.create(safeConfig);
+    const safeWithSigner = safe.connect(signer);
+    const safeTxData = pendingTx.map((tx) =>{
+      const { to, value, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, signatures } = tx;
+      return [
+        to,
+        value,
+        data,
+        operation,
+        safeTxGas,
+        baseGas,
+        gasPrice,
+        gasToken,
+        refundReceiver,
+        signatures,
+      ];
     });
-    const callsOnly = true;
-    console.log(safeTransactionData);
-    const safeSdk = await Safe.create(safeConfig);
-    // if(pendingTx.length>1)
-    // {
-    //   for(let i=1;i<pendingTx.length;i++)
-    //   {
-    //     const nonce = pendingTx[i]['nonce'];
-    //     const rejectionTransaction = await safeSdk.createRejectionTransaction(nonce);
-    //     console.log(rejectionTransaction);
-    //     safeTransactionData.push(rejectionTransaction['data']);
-    //   }
-    // }
-    // console.log(safeTransactionData);
-    const safeTransaction = await safeSdk.createTransaction({safeTransactionData,callsOnly});
-    const executeTxResponse = await safeSdk.executeTransaction(safeTransaction);
-    const receipt = await executeTxResponse.transactionResponse?.wait();
 
-    console.log('Transaction executed:');
-    console.log(`https://goerli.etherscan.io/tx/${receipt?.transactionHash}`);
-
+    const safeContract = await getMultiSendContract({
+      ethAdapter: ethAdapter,
+      safeVersion: await safe.getContractVersion
+    })
+    const encodeTx = safeContract.encode('multiSend',[safeTxData]);
+    const transaction = await safeWithSigner.executeTransaction(encodeTx);
+    console.log("executed tx");
+    console.log(transaction);
+    
   }
+
+
+
+  // ````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````````
+
+
+
+
 
   const executeTxn = async(txHash) =>{
     

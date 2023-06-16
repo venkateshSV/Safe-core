@@ -1,10 +1,8 @@
 import React,{ useState} from 'react'
-import axios from 'axios';
-import { useSearchParams,createSearchParams,useNavigate } from 'react-router-dom'
-import { Sidebar, Menu, MenuItem, SubMenu,sidebarClasses } from 'react-pro-sidebar';
+import { useSearchParams} from 'react-router-dom'
+import { Sidebar, Menu, MenuItem,sidebarClasses } from 'react-pro-sidebar';
 import Transactions from './Transactions';
 import Settings from './Settings';
-import { Link } from 'react-router-dom';
 import Assets from './Assets';
 import CreateTransaction from './CreateTransaction';
 
@@ -12,7 +10,6 @@ const Dashboard = () =>{
     const [searchParams] = useSearchParams();
     const [currentPage,setCurrentPage] = useState('home');
     const safeAddress = searchParams.get("id");   
-    const navigate = useNavigate();
 
     const openTransactions = () =>{
         setCurrentPage('transactions');
@@ -42,7 +39,7 @@ const Dashboard = () =>{
                 backgroundColor:'#003C6D',
                 width:220,
                 position:'absolute',
-                height:'95vh'
+                height:'95vh',
               },
             }}>
               <Menu>
@@ -57,7 +54,7 @@ const Dashboard = () =>{
           </Sidebar>
         </div>
         {
-            currentPage=='home' ? 
+            currentPage==='home' ? 
             <div style={{paddingLeft:'300px'}}>
             <h1>
               <p>
@@ -65,19 +62,19 @@ const Dashboard = () =>{
               </p>
             </h1>
           </div>
-          : currentPage=='transactions' ?
+          : currentPage==='transactions' ?
             <div style={{paddingLeft:'300px'}}>
                 <Transactions />
             </div>
-          : currentPage=='settings' ?
+          : currentPage==='settings' ?
             <div style={{paddingLeft:'300px'}}>
                 <Settings />
             </div>
-          :currentPage=='assets' ?
+          :currentPage==='assets' ?
           <div style={{paddingLeft:'300px'}}>
               <Assets />
           </div>
-          :currentPage=='newTransaction' ?
+          :currentPage==='newTransaction' ?
           <div style={{paddingLeft:'300px'}}>
               <CreateTransaction/>
           </div>
